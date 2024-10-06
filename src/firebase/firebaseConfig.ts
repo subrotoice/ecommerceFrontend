@@ -1,6 +1,6 @@
 // Import the necessary functions from Firebase SDK (v9 Modular Syntax)
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,4 +17,7 @@ const app = initializeApp(firebaseConfig);
 
 // Export Firebase Auth and Google Auth Provider
 export const authFirebase = getAuth(app); // Get Firebase Auth instance
-export const googleProvider = new GoogleAuthProvider(); // Google Auth provider
+
+// Initialize Google and GitHub providers
+export const googleProvider = new GoogleAuthProvider();
+export const githubProvider = new GithubAuthProvider();

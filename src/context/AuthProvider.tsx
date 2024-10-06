@@ -6,13 +6,22 @@ import {
   useState,
 } from "react";
 import firebase from "firebase/compat/app";
-import { authFirebase, googleProvider } from "../firebase/firebaseConfig";
-import { signInWithPopup, signOut } from "firebase/auth";
+import { authFirebase } from "../firebase/firebaseConfig";
+import { signOut } from "firebase/auth";
+import {
+  signUp,
+  login,
+  loginWithGoogle,
+  loginWithGithub,
+} from "../firebase/authService";
 
-// 1. Define the shape of the context
+// 1. Define AuthContext types
 interface AuthContextType {
   user: firebase.User | null;
+  signUp: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  loginWithGithub: () => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -35,42 +44,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     return unsubscribe;
   }, []);
 
-  //   // Function to Create user with Email and Password
-  //   const createUser = async (email, password) => {
-  //     try {
-  //       await auth.createUserWithEmailAndPassword(auth, email, password);
-  //     } catch (error) {
-  //       console.error("Google sign-in error:", error);
-  //     }
-  //   };
-
-  // Function to log in using Google provider
-  const loginWithGoogle = async () => {
-    try {
-      await signInWithPopup(authFirebase, googleProvider);
-    } catch (error) {
-      console.error("Google sign-in error:", error);
-    }
+  // Email/Password Sign-up
+  const signUpWithEmail = async (email: string, password: string) => {
+    await signUp(email, password);
   };
 
-  // Function to log out the user
+  // Email/Password Login
+  const loginWithEmail = async (email: string, password: string) => {
+    await login(email, password);
+  };
+
+  // Google Login
+  const loginGoogle = async () => {
+    await loginWithGoogle();
+  };
+
+  // GitHub Login
+  const loginGithub = async () => {
+    await loginWithGithub();
+  };
+
+  // Logout
   const logout = async () => {
-    try {
-      await signOut(authFirebase);
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    await signOut(authFirebase);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loginWithGoogle, logout }}>
+    <AuthContext.Provider
+      value={{
+        user, // user: user same
+        signUp: signUpWithEmail,
+        login: loginWithEmail,
+        loginWithGoogle: loginGoogle,
+        loginWithGithub: loginGithub,
+        logout,
+      }}
+    >
       {!loading && children}{" "}
       {/* Only render children when loading is complete */}
     </AuthContext.Provider>
   );
 };
 
-// 4. Custom hook to use the AuthContext
+// Custom hook to use the AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

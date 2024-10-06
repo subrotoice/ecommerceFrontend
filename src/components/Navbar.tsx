@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import NavLinks from "./NavLinks";
-import { useAuth } from "../provider/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 
 const Navbar = () => {
   const { user, logout } = useAuth(); // Access the user and login function

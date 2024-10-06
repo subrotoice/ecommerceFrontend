@@ -1,6 +1,32 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
+import { FieldValues, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Register = () => {
+  const { register, handleSubmit } = useForm();
+  const { user, signUp } = useAuth(); // Access the user and login function
+
+  const handelSignUp = async (data: FieldValues) => {
+    const { email, password } = data;
+    // console.log(email, password);
+
+    try {
+      await signUp(email, password);
+      toast.success("Account created successfully!"); // Show success notification
+    } catch (error: any) {
+      // Handle Firebase errors with toast
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("This email is already registered.");
+      } else if (error.code === "auth/invalid-email") {
+        toast.error("Invalid email format.");
+      } else if (error.code === "auth/weak-password") {
+        toast.error("Password should be at least 6 characters.");
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
   return (
     <div>
       <div className="py-8">
@@ -8,7 +34,10 @@ const Register = () => {
           <div className="rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900 flex-col flex h-full items-center justify-center sm:px-4">
             <div className="flex h-full flex-col justify-center gap-4 p-6">
               <div className="left-0 right-0 inline-block border-gray-200 px-2 py-2.5 sm:px-4">
-                <form className="flex flex-col gap-4 pb-4">
+                <form
+                  onSubmit={handleSubmit(handelSignUp)}
+                  className="flex flex-col gap-4 pb-4"
+                >
                   <h1 className="mb-4 text-2xl font-bold dark:text-white text-center">
                     Register Your Account
                   </h1>
@@ -31,6 +60,7 @@ const Register = () => {
                           id="name"
                           type="text"
                           name="name"
+                          {...register("name")}
                           placeholder="Your name"
                           autoComplete="on"
                           required
@@ -57,6 +87,7 @@ const Register = () => {
                           id="photo"
                           type="text"
                           name="photo"
+                          {...register("photo")}
                           placeholder="Photo URL"
                           autoComplete="on"
                           required
@@ -80,6 +111,7 @@ const Register = () => {
                           id="email"
                           type="email"
                           name="email"
+                          {...register("email")}
                           placeholder="email@example.com"
                           autoComplete="on"
                           required
@@ -106,6 +138,7 @@ const Register = () => {
                           id="password"
                           type="password"
                           name="password"
+                          {...register("password")}
                           placeholder="Password"
                           autoComplete="on"
                           required

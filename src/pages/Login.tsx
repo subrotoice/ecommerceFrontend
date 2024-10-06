@@ -1,5 +1,5 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../provider/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 
 const Login = () => {
   const { user, loginWithGoogle } = useAuth(); // Access the user and login function
