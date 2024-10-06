@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const { user, signUp } = useAuth(); // Access the user and login function
+
+  if (user) return <Navigate to="/" />;
 
   const handelSignUp = async (data: FieldValues) => {
     const { email, password } = data;
@@ -27,6 +29,7 @@ const Register = () => {
       }
     }
   };
+
   return (
     <div>
       <div className="py-8">
@@ -59,7 +62,6 @@ const Register = () => {
                               dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="name"
                           type="text"
-                          name="name"
                           {...register("name")}
                           placeholder="Your name"
                           autoComplete="on"
@@ -86,7 +88,6 @@ const Register = () => {
                               dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="photo"
                           type="text"
-                          name="photo"
                           {...register("photo")}
                           placeholder="Photo URL"
                           autoComplete="on"
@@ -110,7 +111,6 @@ const Register = () => {
                           className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="email"
                           type="email"
-                          name="email"
                           {...register("email")}
                           placeholder="email@example.com"
                           autoComplete="on"
@@ -137,7 +137,6 @@ const Register = () => {
                               dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="password"
                           type="password"
-                          name="password"
                           {...register("password")}
                           placeholder="Password"
                           autoComplete="on"
@@ -180,7 +179,7 @@ const Register = () => {
                     Have an Account? &nbsp;
                     <Link
                       className="text-blue-500 underline hover:text-blue-600"
-                      to="/register"
+                      to="/login"
                     >
                       Login Here
                     </Link>

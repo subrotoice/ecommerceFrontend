@@ -1,15 +1,27 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../context/AuthContext";
+import { FieldValues, useForm } from "react-hook-form";
 
 const Login = () => {
-  const { user, loginWithGoogle } = useAuth(); // Access the user and login function
+  const { user, login, loginWithGoogle } = useAuth(); // Access the user and login function
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  if (user) return <Navigate to="/" />;
-
+  //   if (user) return <Navigate to="/" />;
+  //   console.log(user);
   const handleLoginWithGoogle = async () => {
     try {
       await loginWithGoogle(); // Handle Firebase login
+      navigate("/"); // Redirect to homepage after successful login
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
+  const handleLoginWithEmail = async ({ email, password }: FieldValues) => {
+    console.log(email, password);
+    try {
+      const response = await login(email, password); // Handle Firebase login
       navigate("/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
@@ -23,7 +35,10 @@ const Login = () => {
           <div className="rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900 flex-col flex h-full items-center justify-center sm:px-4">
             <div className="flex h-full flex-col justify-center gap-4 p-6">
               <div className="left-0 right-0 inline-block border-gray-200 px-2 py-2.5 sm:px-4">
-                <form className="flex flex-col gap-4 pb-4">
+                <form
+                  onSubmit={handleSubmit(handleLoginWithEmail)}
+                  className="flex flex-col gap-4 pb-4"
+                >
                   <h1 className="mb-4 text-2xl font-bold dark:text-white text-center">
                     Login your Account
                   </h1>
@@ -42,7 +57,7 @@ const Login = () => {
                           className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="email"
                           type="email"
-                          name="email"
+                          {...register("email")}
                           placeholder="email@example.com"
                           autoComplete="on"
                           required
@@ -68,7 +83,7 @@ const Login = () => {
                               dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-none"
                           id="password"
                           type="password"
-                          name="password"
+                          {...register("password")}
                           placeholder="Password"
                           autoComplete="on"
                           required
