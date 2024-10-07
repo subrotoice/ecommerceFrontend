@@ -28,7 +28,7 @@ const HomePageMiddleNews = () => {
 
   useEffect(() => {
     axios
-      .get<News[]>("http://localhost:5000/news")
+      .get<News[]>("https://express-server-xi-one.vercel.app/news")
       .then((res) => setNews(res.data)) // Success or No Error
       .catch((err) => console.log(err.message)); // Fail or Error
   }, []);

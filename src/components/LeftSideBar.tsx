@@ -10,7 +10,7 @@ const LeftSideBar = () => {
   const [categories, setCategories] = useState<Categories[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/categories")
+    fetch("https://express-server-xi-one.vercel.app/categories")
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.log(err));

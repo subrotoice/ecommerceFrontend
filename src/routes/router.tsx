@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <NewsDetails />,
         loader: async ({ params }) => {
           const response = await fetch(
-            `http://localhost:5000/news/${params.id}`
+            `https://express-server-xi-one.vercel.app/news/${params.id}`
           );
           return await response.json(); // Ensure valid JSON
         },
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <NewsCategories />,
         loader: async ({ params }) => {
           const response = await fetch(
-            `http://localhost:5000/category/${params.id}`
+            `https://express-server-xi-one.vercel.app/${params.id}`
           );
           return await response.json(); // Ensure valid JSON
         },
