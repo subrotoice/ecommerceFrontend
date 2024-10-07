@@ -21,7 +21,7 @@ const ProductsComponent = () => {
 
   useEffect(() => {
     axios
-      .get<Product[]>("http://localhost:5000/api/products")
+      .get<Product[]>("https://express-server-xi-one.vercel.app/api/products")
       .then((res) => setProducts(res.data)) // Success or No Error
       .catch((err) => console.log(err.message)); // Fail or Error
   }, []);
