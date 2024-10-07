@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 
 const AuthLayout = () => {
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       <Navbar />
       <Outlet />
     </div>

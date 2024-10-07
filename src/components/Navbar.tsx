@@ -66,28 +66,46 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+          {!user ? (
+            <Link to="/login">
+              <button className="btn btn-outline btn-sm btn-accent">
+                Login
+              </button>
+            </Link>
+          ) : (
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="w-10 rounded-full">
+                  <img
+                    alt="Tailwind CSS Navbar component"
+                    src={
+                      user.displayName
+                        ? user.photoURL
+                        : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    }
+                  />
+                </div>
               </div>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-1 w-52 p-2 shadow"
+              >
+                <li className="p-2 font-bold">{user.displayName}</li>
+                <li>
+                  <button
+                    onClick={handelLogout}
+                    className="btn btn-outline btn-sm btn-accent ml-2"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
             </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-1 w-52 p-2 shadow"
-            >
-              <li>
-                <a>Logout</a>
-              </li>
-            </ul>
-          </div>
+          )}
         </div>
       </div>
     </div>
