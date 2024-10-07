@@ -4,18 +4,18 @@ import AuthLayout from "../pages/AuthLayout";
 import Career from "../pages/Career";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import News from "../pages/News";
-import NewsDetails from "../pages/NewsDetails";
-import Register from "../pages/Register";
 import NewsCategories from "../pages/NewsCategories";
+import NewsDetails from "../pages/NewsDetails";
 import NotFound from "../pages/NotFound";
 import PrivateRoutes from "../pages/PrivateRoutes";
+import Products from "../pages/Products";
+import Register from "../pages/Register";
 
 const router = createBrowserRouter([
   { path: "/", errorElement: <NotFound />, element: <Home /> },
   { path: "/about", element: <About /> },
   { path: "/career", element: <Career /> },
-  { path: "/news", element: <News /> },
+  { path: "/products", element: <Products /> },
   {
     element: <AuthLayout />,
     children: [
