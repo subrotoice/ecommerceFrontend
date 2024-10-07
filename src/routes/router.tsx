@@ -8,35 +8,45 @@ import News from "../pages/News";
 import NewsDetails from "../pages/NewsDetails";
 import Register from "../pages/Register";
 import NewsCategories from "../pages/NewsCategories";
+import NotFound from "../pages/NotFound";
+import PrivateRoutes from "../pages/PrivateRoutes";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
+  { path: "/", errorElement: <NotFound />, element: <Home /> },
   { path: "/about", element: <About /> },
   { path: "/career", element: <Career /> },
   { path: "/news", element: <News /> },
-  {
-    path: "/news/:id",
-    element: <NewsDetails />,
-    loader: async ({ params }) => {
-      const response = await fetch(`http://localhost:5000/news/${params.id}`);
-      return await response.json(); // Ensure valid JSON
-    },
-  },
-  {
-    path: "/category/:id",
-    element: <NewsCategories />,
-    loader: async ({ params }) => {
-      const response = await fetch(
-        `http://localhost:5000/category/${params.id}`
-      );
-      return await response.json(); // Ensure valid JSON
-    },
-  },
   {
     element: <AuthLayout />,
     children: [
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+    ],
+  },
+
+  {
+    element: <PrivateRoutes />,
+    children: [
+      {
+        path: "/news/:id",
+        element: <NewsDetails />,
+        loader: async ({ params }) => {
+          const response = await fetch(
+            `http://localhost:5000/news/${params.id}`
+          );
+          return await response.json(); // Ensure valid JSON
+        },
+      },
+      {
+        path: "/category/:id",
+        element: <NewsCategories />,
+        loader: async ({ params }) => {
+          const response = await fetch(
+            `http://localhost:5000/category/${params.id}`
+          );
+          return await response.json(); // Ensure valid JSON
+        },
+      },
     ],
   },
 ]);
