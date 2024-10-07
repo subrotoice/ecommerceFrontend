@@ -1,5 +1,4 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 
@@ -10,11 +9,12 @@ const PrivateRoutes = () => {
   if (!user) return <Navigate to="/login" state={location.state} />;
 
   return (
-    <div>
-      <Header />
-      <Navbar />
+    <>
+      <div className="max-w-6xl mx-auto">
+        <Navbar />
+      </div>
       <Outlet />
-    </div>
+    </>
   );
 };
 

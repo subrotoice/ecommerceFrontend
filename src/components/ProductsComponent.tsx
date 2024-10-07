@@ -26,8 +26,6 @@ const ProductsComponent = () => {
       .catch((err) => console.log(err.message)); // Fail or Error
   }, []);
 
-  console.log(products);
-
   return (
     <div>
       <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
@@ -37,7 +35,7 @@ const ProductsComponent = () => {
           {/* Product listing with card start */}
           <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
-              <ProductCard product={product} />
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
 

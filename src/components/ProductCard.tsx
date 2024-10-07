@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Product } from "./ProductsComponent";
 import StarRating from "./StarRating";
 
@@ -6,7 +7,7 @@ interface Props {
 }
 
 const ProductCard = ({
-  product: { title, img_url, price, ratings, student },
+  product: { _id, title, img_url, price, ratings, student },
 }: Props) => {
   const parsedRating = parseFloat(ratings.split("/")[0]);
 
@@ -14,7 +15,7 @@ const ProductCard = ({
     <div>
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <div className="h-56 w-full">
-          <a href="#">
+          <Link to={`/products/${_id}`}>
             <img
               className="mx-auto h-full dark:hidden"
               src={img_url}
@@ -25,7 +26,7 @@ const ProductCard = ({
               src={img_url}
               alt={title}
             />
-          </a>
+          </Link>
         </div>
         <div className="pt-6">
           <div className="mb-4 flex items-center justify-between gap-4">
@@ -103,12 +104,12 @@ const ProductCard = ({
               </div>
             </div>
           </div>
-          <a
-            href="#"
+          <Link
+            to={`/products/${_id}`}
             className="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white"
           >
             {title}
-          </a>
+          </Link>
           <div className="mt-2 flex items-center gap-2">
             <StarRating ratings={parsedRating} />
             <p className="text-sm font-medium text-gray-900 dark:text-white">

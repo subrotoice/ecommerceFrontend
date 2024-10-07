@@ -1,10 +1,8 @@
-import React from "react";
-
 interface RatingProps {
   ratings: number;
 }
 
-const StarRating: React.FC<RatingProps> = ({ ratings }) => {
+const StarRating = ({ ratings }: RatingProps) => {
   const fullStars = Math.floor(ratings); // Full stars count
   const hasHalfStar = ratings % 1 !== 0; // Check if there is a half star
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Remaining empty stars

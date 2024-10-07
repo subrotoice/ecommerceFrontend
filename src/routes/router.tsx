@@ -4,18 +4,17 @@ import AuthLayout from "../pages/AuthLayout";
 import Career from "../pages/Career";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import NewsCategories from "../pages/NewsCategories";
-import NewsDetails from "../pages/NewsDetails";
 import NotFound from "../pages/NotFound";
 import PrivateRoutes from "../pages/PrivateRoutes";
 import Products from "../pages/Products";
 import Register from "../pages/Register";
+import ProductDetails from "../pages/ProductDetails";
 
 const router = createBrowserRouter([
   { path: "/", errorElement: <NotFound />, element: <Home /> },
   { path: "/about", element: <About /> },
   { path: "/career", element: <Career /> },
-  { path: "/products", element: <Products /> },
+
   {
     element: <AuthLayout />,
     children: [
@@ -27,22 +26,13 @@ const router = createBrowserRouter([
   {
     element: <PrivateRoutes />,
     children: [
+      { path: "/products", element: <Products /> },
       {
-        path: "/news/:id",
-        element: <NewsDetails />,
+        path: "/products/:id",
+        element: <ProductDetails />,
         loader: async ({ params }) => {
           const response = await fetch(
-            `https://express-server-xi-one.vercel.app/news/${params.id}`
-          );
-          return await response.json(); // Ensure valid JSON
-        },
-      },
-      {
-        path: "/category/:id",
-        element: <NewsCategories />,
-        loader: async ({ params }) => {
-          const response = await fetch(
-            `https://express-server-xi-one.vercel.app/category/${params.id}`
+            `http://localhost:5000/api/products/${params.id}`
           );
           return await response.json(); // Ensure valid JSON
         },

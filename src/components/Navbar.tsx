@@ -84,7 +84,7 @@ const Navbar = () => {
                     alt="Tailwind CSS Navbar component"
                     src={
                       user.displayName
-                        ? user.photoURL
+                        ? user.displayName
                         : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                     }
                   />

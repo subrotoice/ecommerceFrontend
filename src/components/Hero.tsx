@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Hero = () => {
   return (
     <div>
@@ -28,7 +30,9 @@ const Hero = () => {
               excepturi exercitationem quasi. In deleniti eaque aut repudiandae
               et a id nisi.
             </p>
-            <button className="btn btn-primary">Shop</button>
+            <Link to={`/products`}>
+              <button className="btn btn-primary">Shop</button>
+            </Link>
           </div>
         </div>
       </div>
