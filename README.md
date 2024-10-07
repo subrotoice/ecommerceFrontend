@@ -27,7 +27,7 @@ export default {
 *createContext() -> MyContext.Provider(value) -> Wrap -> useContext()*
 
 ### 1. Create a Context & use it inside a Provider Component | Passing Data
-**In single Component Version (Create + Wrap)**
+**Using single Component Version (Create + Wrap)**
 ```jsx
 import { createContext } from 'react';
 const ThemeContext = createContext('light');
@@ -42,7 +42,8 @@ function App() {
   );
 }
 ```
-**Two Components Version 1. Create, 2. Wrap**
+
+**Separate component to wrap with | Two Components Version 1. Create, 2. Wrap**
 ```jsx
 import React, { createContext, useState } from 'react';
 // Create a Context object

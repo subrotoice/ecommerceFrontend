@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import NavLinks from "./NavLinks";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { user, logout } = useAuth(); // Access the user and login function
@@ -10,11 +11,13 @@ const Navbar = () => {
   const handelLogout = async () => {
     try {
       await logout(); // Handle Firebase login
-      navigate("/"); // Redirect to homepage after successful login
+      toast.success("User logged out");
+      // navigate("/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
     }
   };
+
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -60,14 +63,12 @@ const Navbar = () => {
               </button>
             </Link>
           ) : (
-            <Link to="/login">
-              <button
-                onClick={handelLogout}
-                className="btn btn-outline btn-sm btn-accent"
-              >
-                Logout
-              </button>
-            </Link>
+            <button
+              onClick={handelLogout}
+              className="btn btn-outline btn-sm btn-accent"
+            >
+              Logout
+            </button>
           )}
         </div>
       </div>

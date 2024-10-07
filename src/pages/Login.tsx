@@ -3,11 +3,22 @@ import { useAuth } from "../context/AuthContext";
 import { FieldValues, useForm } from "react-hook-form";
 
 const Login = () => {
-  const { user, login, loginWithGoogle } = useAuth(); // Access the user and login function
+  const { user, login, loginWithGoogle, loginWithGithub } = useAuth(); // Access the user and login function
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   //   if (user) return <Navigate to="/" />;
+
+  const handleLoginWithEmail = async ({ email, password }: FieldValues) => {
+    console.log(email, password);
+    try {
+      const response = await login(email, password); // Handle Firebase login
+      navigate("/"); // Redirect to homepage after successful login
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
   //   console.log(user);
   const handleLoginWithGoogle = async () => {
     try {
@@ -18,10 +29,10 @@ const Login = () => {
     }
   };
 
-  const handleLoginWithEmail = async ({ email, password }: FieldValues) => {
-    console.log(email, password);
+  const handleLoginWithGithub = async () => {
     try {
-      const response = await login(email, password); // Handle Firebase login
+      await loginWithGithub(); // Handle Firebase login
+      //   console.log(user);
       navigate("/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
@@ -117,6 +128,7 @@ const Login = () => {
                     <button
                       type="button"
                       className="btn btn-outline mt-2 rounded-none"
+                      onClick={handleLoginWithGithub}
                     >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Sign in with GitHub

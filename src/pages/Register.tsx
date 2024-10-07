@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
-  const { user, signUp } = useAuth(); // Access the user and login function
+  const { user, signUp, loginWithGithub, loginWithGoogle } = useAuth(); // Access the user and login function
 
   if (user) return <Navigate to="/" />;
 
@@ -27,6 +27,25 @@ const Register = () => {
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      await loginWithGoogle(); // Handle Firebase login
+      navigate("/"); // Redirect to homepage after successful login
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
+  const handleLoginWithGithub = async () => {
+    try {
+      await loginWithGithub(); // Handle Firebase login
+      //   console.log(user);
+      navigate("/"); // Redirect to homepage after successful login
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
 
@@ -158,6 +177,7 @@ const Register = () => {
                     <button
                       type="button"
                       className="btn btn-outline btn-error mt-2 rounded-none"
+                      onClick={handleLoginWithGoogle}
                     >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Register with Google
@@ -167,6 +187,7 @@ const Register = () => {
                     <button
                       type="button"
                       className="btn btn-outline mt-2 rounded-none"
+                      onClick={handleLoginWithGithub}
                     >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Register with GitHub
