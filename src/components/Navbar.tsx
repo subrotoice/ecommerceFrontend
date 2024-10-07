@@ -1,12 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import NavLinks from "./NavLinks";
-import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import NavLinks from "./NavLinks";
 
 const Navbar = () => {
   const { user, logout } = useAuth(); // Access the user and login function
-
-  const navigate = useNavigate();
 
   const handelLogout = async () => {
     try {
@@ -63,12 +61,15 @@ const Navbar = () => {
               </button>
             </Link>
           ) : (
-            <button
-              onClick={handelLogout}
-              className="btn btn-outline btn-sm btn-accent"
-            >
-              Logout
-            </button>
+            <>
+              {user.displayName}
+              <button
+                onClick={handelLogout}
+                className="btn btn-outline btn-sm btn-accent ml-2"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
       </div>

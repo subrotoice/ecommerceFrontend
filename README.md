@@ -44,6 +44,7 @@ function App() {
 ```
 
 **Separate component to wrap with | Two Components Version 1. Create, 2. Wrap**
+*Notice: Component name is provider but return context. It's just convension*
 ```jsx
 import React, { createContext, useState } from 'react';
 // Create a Context object

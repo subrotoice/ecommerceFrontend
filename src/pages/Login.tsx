@@ -1,18 +1,18 @@
+import { FieldValues, useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FieldValues, useForm } from "react-hook-form";
 
 const Login = () => {
   const { user, login, loginWithGoogle, loginWithGithub } = useAuth(); // Access the user and login function
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  //   if (user) return <Navigate to="/" />;
+  if (user) return <Navigate to="/" />;
 
   const handleLoginWithEmail = async ({ email, password }: FieldValues) => {
     console.log(email, password);
     try {
-      const response = await login(email, password); // Handle Firebase login
+      await login(email, password); // Handle Firebase login
       navigate("/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
