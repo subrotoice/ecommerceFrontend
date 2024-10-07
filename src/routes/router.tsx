@@ -7,7 +7,7 @@ import Login from "../pages/Login";
 import News from "../pages/News";
 import NewsDetails from "../pages/NewsDetails";
 import Register from "../pages/Register";
-import { News as HomePageMiddleNewsws } from "../components/HomePageMiddleNews";
+import NewsCategories from "../pages/NewsCategories";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -18,8 +18,16 @@ const router = createBrowserRouter([
     path: "/news/:id",
     element: <NewsDetails />,
     loader: async ({ params }) => {
-      const response = await fetch<HomePageMiddleNewsws>(
-        `http://localhost:5000/news/${params.id}`
+      const response = await fetch(`http://localhost:5000/news/${params.id}`);
+      return await response.json(); // Ensure valid JSON
+    },
+  },
+  {
+    path: "/category/:id",
+    element: <NewsCategories />,
+    loader: async ({ params }) => {
+      const response = await fetch(
+        `http://localhost:5000/category/${params.id}`
       );
       return await response.json(); // Ensure valid JSON
     },
