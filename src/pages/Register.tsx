@@ -1,7 +1,7 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
@@ -12,6 +12,7 @@ const Register = () => {
 
   const handelSignUp = async ({ email, password }: FieldValues) => {
     try {
+      // Create the user and get userCredential
       await signUp(email, password);
       toast.success("Account created successfully!"); // Show success notification
     } catch (error: any) {

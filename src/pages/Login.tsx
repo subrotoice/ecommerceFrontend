@@ -1,19 +1,21 @@
 import { FieldValues, useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const { user, login, loginWithGoogle, loginWithGithub } = useAuth(); // Access the user and login function
   const { register, handleSubmit } = useForm();
+  const location = useLocation();
   const navigate = useNavigate();
+  console.log(location);
 
-  if (user) return <Navigate to="/" />;
+  if (user) return <Navigate to={location.state} />;
 
   const handleLoginWithEmail = async ({ email, password }: FieldValues) => {
     console.log(email, password);
     try {
       await login(email, password); // Handle Firebase login
-      navigate("/"); // Redirect to homepage after successful login
+      navigate(location.state ? location.state : "/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -23,7 +25,7 @@ const Login = () => {
   const handleLoginWithGoogle = async () => {
     try {
       await loginWithGoogle(); // Handle Firebase login
-      navigate("/"); // Redirect to homepage after successful login
+      navigate(location.state ? location.state : "/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -33,7 +35,7 @@ const Login = () => {
     try {
       await loginWithGithub(); // Handle Firebase login
       //   console.log(user);
-      navigate("/"); // Redirect to homepage after successful login
+      navigate(location.state ? location.state : "/"); // Redirect to homepage after successful login
     } catch (error) {
       console.error("Login error:", error);
     }

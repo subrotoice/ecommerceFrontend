@@ -43,6 +43,7 @@ const NewsCard = ({
               {details.slice(0, 200)}{" "}
               <Link
                 to={`/news/${_id}`}
+                state={`/news/${_id}`}
                 className="text-blue-600 underline font-bold text-lg"
               >
                 Read More...
