@@ -1,5 +1,12 @@
+import Navbar from "../components/Navbar";
+
 const Career = () => {
-  return <div>Career</div>;
+  return (
+    <div>
+      <Navbar />
+      Career
+    </div>
+  );
 };
 
 export default Career;

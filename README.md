@@ -97,6 +97,102 @@ Install FireBase
 ```bash
 npm install firebase
 ```
+**A simple firebase example which is responsible for createing new user using email and Password and Update profile with name and photo**
+```jsx
+// Import necessary modules
+import { initializeApp } from "firebase/app";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
+import React, { useState } from "react";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyA8ehawlsWmF8r0kb4qWL7wSNsh6HVywVQ",
+  authDomain: "breaking-news-cfbca.firebaseapp.com",
+  projectId: "breaking-news-cfbca",
+  storageBucket: "breaking-news-cfbca.appspot.com",
+  messagingSenderId: "371790083227",
+  appId: "1:371790083227:web:4da5c666899abe60a2c23e",
+};
+
+// Initialize Firebase
+initializeApp(firebaseConfig);
+
+const Register: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [error, setError] = useState("");
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const auth = getAuth();
+
+    try {
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: name, photoURL: photo });
+
+      console.log("User registered successfully:", user);
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Error registering user:", err);
+    }
+  };
+
+  return (
+    <form
+      onSubmit={handleRegister}
+      className="max-w-6xl mx-auto flex flex-col gap-4"
+    >
+      <div>
+        <label>Name:</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Photo:</label>
+        <input type="text" onChange={(e) => setPhoto(e.target.value)} />
+      </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">Register</button>
+    </form>
+  );
+};
+
+export default Register;
+```
 
 - FireBase configuration
 ```javascript

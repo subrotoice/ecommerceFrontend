@@ -1,4 +1,12 @@
-import { User as FirebaseUser, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  User as FirebaseUser,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+  UserCredential,
+} from "firebase/auth";
 import {
   createContext,
   ReactNode,
@@ -7,20 +15,26 @@ import {
   useState,
 } from "react";
 import {
-  login,
-  loginWithGithub,
-  loginWithGoogle,
-  signUp,
-} from "../firebase/authService";
-import { authFirebase } from "../firebase/firebaseConfig";
+  authFirebase,
+  githubProvider,
+  googleProvider,
+} from "../firebase/firebaseConfig";
 
+interface ProfileInfo {
+  displayName: string;
+  photoURL: string;
+}
 // 1. Define AuthContext types
 interface AuthContextType {
   user: FirebaseUser | null;
-  signUp: (email: string, password: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
-  loginWithGithub: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<UserCredential>;
+  updateProfileWithEmail: (
+    user: FirebaseUser,
+    profileInfo: ProfileInfo
+  ) => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<UserCredential>;
+  loginWithGoogle: () => Promise<UserCredential>;
+  loginWithGithub: () => Promise<UserCredential>;
   logout: () => Promise<void>;
 }
 
@@ -45,22 +59,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   // Email/Password Sign-up
   const signUpWithEmail = async (email: string, password: string) => {
-    await signUp(email, password);
+    return await createUserWithEmailAndPassword(authFirebase, email, password);
+  };
+
+  // Email/Password Sign-up
+  const updateProfileWithEmail = async (
+    user: FirebaseUser,
+    profileInfo: ProfileInfo
+  ) => {
+    return await updateProfile(user, profileInfo);
   };
 
   // Email/Password Login
   const loginWithEmail = async (email: string, password: string) => {
-    await login(email, password);
+    return await signInWithEmailAndPassword(authFirebase, email, password);
   };
 
   // Google Login
   const loginGoogle = async () => {
-    await loginWithGoogle();
+    return await signInWithPopup(authFirebase, googleProvider);
   };
 
   // GitHub Login
   const loginGithub = async () => {
-    await loginWithGithub();
+    return await signInWithPopup(authFirebase, githubProvider);
   };
 
   // Logout
@@ -71,9 +93,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
-        user, // user: user same
+        user: user, // user: user same
         signUp: signUpWithEmail,
-        login: loginWithEmail,
+        updateProfileWithEmail,
+        loginWithEmail,
         loginWithGoogle: loginGoogle,
         loginWithGithub: loginGithub,
         logout,

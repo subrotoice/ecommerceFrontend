@@ -33,7 +33,7 @@ const HomePageMiddleNews = () => {
       .catch((err) => console.log(err.message)); // Fail or Error
   }, []);
 
-  console.log(news);
+  //   console.log(news);
 
   return (
     <div>

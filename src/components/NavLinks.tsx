@@ -9,7 +9,7 @@ const NavLinks = () => {
   const menuItems: MenuItem[] = [
     { label: "Home", url: "/" },
     { label: "About", url: "/about" },
-    { label: "career", url: "/career" },
+    { label: "Career", url: "/career" },
   ];
   return (
     <>

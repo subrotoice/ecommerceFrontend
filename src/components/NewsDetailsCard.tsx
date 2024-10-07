@@ -1,7 +1,6 @@
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { News } from "./HomePageMiddleNews";
-import RightSideBar from "./RightSideBar";
 
 interface Props {
   newsDetails: News;

@@ -1,50 +1,31 @@
 import { FieldValues, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
-  const { user, signUp, loginWithGithub, loginWithGoogle } = useAuth(); // Access the user and login function
+  const { signUp, updateProfileWithEmail } = useAuth(); // Access the user and login function
   const navigate = useNavigate();
 
-  if (user) return <Navigate to="/" />;
-
-  const handelSignUp = async ({ email, password }: FieldValues) => {
+  const handelSignUp = async ({
+    name,
+    photo,
+    email,
+    password,
+  }: FieldValues) => {
+    console.log(name, photo, email, password);
     try {
-      // Create the user and get userCredential
-      await signUp(email, password);
-      toast.success("Account created successfully!"); // Show success notification
-    } catch (error: any) {
-      // Handle Firebase errors with toast
-      if (error.code === "auth/email-already-in-use") {
-        toast.error("This email is already registered.");
-      } else if (error.code === "auth/invalid-email") {
-        toast.error("Invalid email format.");
-      } else if (error.code === "auth/weak-password") {
-        toast.error("Password should be at least 6 characters.");
-      } else {
-        toast.error("An unexpected error occurred. Please try again.");
-      }
-    }
-  };
-
-  const handleLoginWithGoogle = async () => {
-    try {
-      await loginWithGoogle(); // Handle Firebase login
-      navigate("/"); // Redirect to homepage after successful login
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  };
-
-  const handleLoginWithGithub = async () => {
-    try {
-      await loginWithGithub(); // Handle Firebase login
-      //   console.log(user);
-      navigate("/"); // Redirect to homepage after successful login
-    } catch (error) {
-      console.error("Login error:", error);
+      // Create user with email and password
+      const userCredential = await signUp(email, password);
+      const user = userCredential.user;
+      await updateProfileWithEmail(user, {
+        displayName: name,
+        photoURL: photo,
+      });
+      //   console.log("User registered successfully:", user);
+      navigate("/");
+    } catch (err) {
+      console.error("Error registering user:", err);
     }
   };
 
@@ -170,26 +151,6 @@ const Register = () => {
                     >
                       <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
                         Create Account
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline btn-error mt-2 rounded-none"
-                      onClick={handleLoginWithGoogle}
-                    >
-                      <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
-                        Register with Google
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-outline mt-2 rounded-none"
-                      onClick={handleLoginWithGithub}
-                    >
-                      <span className="flex items-center justify-center gap-1 font-medium py-1 px-2.5 text-base false">
-                        Register with GitHub
                       </span>
                     </button>
                   </div>
