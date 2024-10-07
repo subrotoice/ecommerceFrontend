@@ -2,14 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import NewsCard from "./NewsCard";
 
+interface Rating {
+  number: number;
+}
+
+interface Author {
+  img: string; // URL to the image
+  name: string; // Any other properties like name, etc.
+  published_date: string;
+}
+
 export interface News {
   _id: number;
   title: string;
   image_url: string;
-  rating: string;
+  rating: Rating;
   total_view: number;
-  author: string;
+  author: Author;
   details: string;
+  category_id: number;
 }
 
 const HomePageMiddleNews = () => {

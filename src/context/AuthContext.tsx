@@ -1,3 +1,4 @@
+import { User as FirebaseUser, signOut } from "firebase/auth";
 import {
   createContext,
   ReactNode,
@@ -5,19 +6,17 @@ import {
   useEffect,
   useState,
 } from "react";
-import firebase from "firebase/compat/app";
-import { authFirebase } from "../firebase/firebaseConfig";
-import { signOut } from "firebase/auth";
 import {
-  signUp,
   login,
-  loginWithGoogle,
   loginWithGithub,
+  loginWithGoogle,
+  signUp,
 } from "../firebase/authService";
+import { authFirebase } from "../firebase/firebaseConfig";
 
 // 1. Define AuthContext types
 interface AuthContextType {
-  user: firebase.User | null;
+  user: FirebaseUser | null;
   signUp: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -32,7 +31,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<firebase.User | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Monitor the Firebase auth state and set the user
