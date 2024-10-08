@@ -1,4 +1,4 @@
-### **Install google fonts**
+### **Install google fonts in Tailwind**
 1. [fonts.google.com/specimen/Poppins](https://fonts.google.com/specimen/Poppins)
 2. Get Font -> Embed Code -> @Import
   - Put that import link in the top of main.tsx
@@ -43,7 +43,7 @@ function App() {
 }
 ```
 
-**Separate component to wrap with | Two Components Version 1. Create, 2. Wrap**
+**Separate component to wrap with | Two Components Step1: Create, Step2: Wrap**
 *Notice: Component name is provider but return context. It's just convension*
 ```jsx
 import React, { createContext, useState } from 'react';
@@ -121,7 +121,7 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
-const Register: React.FC = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -193,7 +193,7 @@ const Register: React.FC = () => {
 
 export default Register;
 ```
-
+**In Multiple file: Productoin gread**
 - FireBase configuration
 ```javascript
 // firebase/firebaseConfig.ts 
@@ -212,46 +212,17 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 // Export Firebase Auth and Google Auth Provider
-export const authFirebase = getAuth(app); // Get Firebase Auth instance
+export const authFirebase = getAuth(); // Get Firebase Auth instance
 
 // Initialize Google and GitHub providers
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 ```
-```tsx
-// firebase/authService.ts
-import { authFirebase, googleProvider, githubProvider } from "./firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
 
-// Sign up with email and password
-export const signUp = async (email: string, password: string) => {
-  return await createUserWithEmailAndPassword(authFirebase, email, password);
-};
-
-// Log in with email and password
-export const login = async (email: string, password: string) => {
-  return await signInWithEmailAndPassword(authFirebase, email, password);
-};
-
-// Log in with Google
-export const loginWithGoogle = async () => {
-  return await signInWithPopup(authFirebase, googleProvider);
-};
-
-// Log in with GitHub
-export const loginWithGithub = async () => {
-  return await signInWithPopup(authFirebase, githubProvider);
-};
-```
-
-****
+**Export: Provider - return: Context**
 ```jsx
 // context/AuthContext.tsx
 import {
@@ -261,23 +232,29 @@ import {
   useEffect,
   useState,
 } from "react";
-import firebase from "firebase/compat/app";
-import { authFirebase } from "../firebase/firebaseConfig";
-import { signOut } from "firebase/auth";
-import {
-  signUp,
-  login,
-  loginWithGoogle,
-  loginWithGithub,
-} from "../firebase/authService";
 
+// Export Firebase Auth and Google Auth Provider
+const auth = getAuth(); // Get Firebase Auth instance
+
+// Initialize Google and GitHub providers
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
+interface ProfileInfo {
+  displayName: string;
+  photoURL: string;
+}
 // 1. Define AuthContext types
 interface AuthContextType {
-  user: firebase.User | null;
-  signUp: (email: string, password: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
-  loginWithGithub: () => Promise<void>;
+  user: FirebaseUser | null;
+  signUp: (email: string, password: string) => Promise<UserCredential>;
+  updateProfileWithEmail: (
+    user: FirebaseUser,
+    profileInfo: ProfileInfo
+  ) => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<UserCredential>;
+  loginWithGoogle: () => Promise<UserCredential>;
+  loginWithGithub: () => Promise<UserCredential>;
   logout: () => Promise<void>;
 }
 
@@ -285,15 +262,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // 3. AuthProvider component that wraps the entire app
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [user, setUser] = useState<firebase.User | null>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Monitor the Firebase auth state and set the user
   useEffect(() => {
-    const unsubscribe = authFirebase.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
       setLoading(false);
     });
@@ -302,35 +277,44 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   // Email/Password Sign-up
   const signUpWithEmail = async (email: string, password: string) => {
-    await signUp(email, password);
+    return await createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  // Email/Password Sign-up
+  const updateProfileWithEmail = async (
+    user: FirebaseUser,
+    profileInfo: ProfileInfo
+  ) => {
+    return await updateProfile(user, profileInfo);
   };
 
   // Email/Password Login
   const loginWithEmail = async (email: string, password: string) => {
-    await login(email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
   };
 
   // Google Login
   const loginGoogle = async () => {
-    await loginWithGoogle();
+    return await signInWithPopup(auth, googleProvider);
   };
 
   // GitHub Login
   const loginGithub = async () => {
-    await loginWithGithub();
+    return await signInWithPopup(auth, githubProvider);
   };
 
   // Logout
   const logout = async () => {
-    await signOut(authFirebase);
+    await signOut(auth);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user, // user: user same
+        user: user, // user: user same
         signUp: signUpWithEmail,
-        login: loginWithEmail,
+        updateProfileWithEmail,
+        loginWithEmail,
         loginWithGoogle: loginGoogle,
         loginWithGithub: loginGithub,
         logout,
@@ -342,7 +326,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// 4. Custom hook to use the AuthContext
+// 4. Custom hook to use the AuthContext | will use useAuth() instated of useContext(AuthContext)
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -352,7 +336,6 @@ export const useAuth = () => {
 };
 
 export default AuthProvider;
-
 ```
 
 

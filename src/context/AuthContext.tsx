@@ -1,6 +1,9 @@
 import {
   createUserWithEmailAndPassword,
   User as FirebaseUser,
+  getAuth,
+  GithubAuthProvider,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -14,11 +17,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  authFirebase,
-  githubProvider,
-  googleProvider,
-} from "../firebase/firebaseConfig";
+
+// Export Firebase Auth and Google Auth Provider
+const auth = getAuth(); // Get Firebase Auth instance
+
+// Initialize Google and GitHub providers
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
 interface ProfileInfo {
   displayName: string;
@@ -42,15 +47,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // 3. AuthProvider component that wraps the entire app
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Monitor the Firebase auth state and set the user
   useEffect(() => {
-    const unsubscribe = authFirebase.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
       setLoading(false);
     });
@@ -59,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   // Email/Password Sign-up
   const signUpWithEmail = async (email: string, password: string) => {
-    return await createUserWithEmailAndPassword(authFirebase, email, password);
+    return await createUserWithEmailAndPassword(auth, email, password);
   };
 
   // Email/Password Sign-up
@@ -72,22 +75,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   // Email/Password Login
   const loginWithEmail = async (email: string, password: string) => {
-    return await signInWithEmailAndPassword(authFirebase, email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
   };
 
   // Google Login
   const loginGoogle = async () => {
-    return await signInWithPopup(authFirebase, googleProvider);
+    return await signInWithPopup(auth, googleProvider);
   };
 
   // GitHub Login
   const loginGithub = async () => {
-    return await signInWithPopup(authFirebase, githubProvider);
+    return await signInWithPopup(auth, githubProvider);
   };
 
   // Logout
   const logout = async () => {
-    await signOut(authFirebase);
+    await signOut(auth);
   };
 
   return (
@@ -108,7 +111,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// 4. Custom hook to use the AuthContext
+// 4. Custom hook to use the AuthContext | will use useAuth() instated of useContext(AuthContext)
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
