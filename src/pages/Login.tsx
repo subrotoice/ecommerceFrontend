@@ -57,7 +57,7 @@ const Login = () => {
                   className="flex flex-col gap-4 pb-4"
                 >
                   <h1 className="mb-4 text-2xl font-bold dark:text-white text-center">
-                    Login your Account
+                    Login your Account.
                   </h1>
                   <div>
                     <div className="mb-2">
