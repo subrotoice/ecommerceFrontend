@@ -17,9 +17,10 @@ import {
   useEffect,
   useState,
 } from "react";
+import app from "../firebase/firebaseConfig";
 
 // Export Firebase Auth and Google Auth Provider
-const auth = getAuth(); // Get Firebase Auth instance
+const auth = getAuth(app); // Get Firebase Auth instance
 
 // Initialize Google and GitHub providers
 const googleProvider = new GoogleAuthProvider();
